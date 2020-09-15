@@ -279,7 +279,8 @@ namespace DiagramViewer.ViewModels {
         }
 
         private void OnExecuteCloseCommand() {
-            umlDiagram.RemoveClassesFromDiagram(new List<UmlClass> { Class });
+            //umlDiagram.RemoveClassesFromDiagram(new List<UmlClass> { Class });
+            umlDiagram.RemoveClassesFromModel(new List<UmlClass> { Class });
         }
     }
 }
