@@ -1,0 +1,584 @@
+﻿<Window x:Class="UmlEditor.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:UmlEditor.Controls" xmlns:Converters="clr-namespace:UmlEditor.Converters"
+        xmlns:gf="clr-namespace:GraphFramework;assembly=GraphFramework" xmlns:Markup="clr-namespace:UmlEditor.MarkupExtensions"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:ue="clr-namespace:UmlEditor"
+        xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan" Title="MainWindow"
+        Width="800" Height="600"
+        UseLayoutRounding="True" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UmlEditor;component/Resources/Icons/MoviePlay.xaml" />
+                <ResourceDictionary Source="/UmlEditor;component/Resources/Icons/MoviePause.xaml" />
+                <ResourceDictionary Source="/UmlEditor;component/Resources/Icons/FolderOpen.xaml" />
+                <ResourceDictionary Source="/UmlEditor;component/Resources/Icons/GeneralSave.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <controls:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="mainGrid" SizeChanged="OnSizeChanged"
+          Style="{StaticResource GridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition x:Name="secondColumn" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--
+            <gf:GraphAnimator x:Name="animator" Grid.Column="1"
+            Margin="10"
+            Graph="{Binding Graph}">
+            <gf:GraphAnimator.Simulator>
+            <gf:GraphSimulator x:Name="simulator" />
+            </gf:GraphAnimator.Simulator>
+            </gf:GraphAnimator>
+        -->
+
+        <Grid Grid.Row="1" Grid.Column="1"
+              Background="RoyalBlue">
+
+            <!--
+                <Grid.Background>
+                <ImageBrush ImageSource="Resources/Images/background1.jpg" Stretch="Fill" />
+                </Grid.Background>
+            -->
+
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1"
+              Margin="0,0,0,0">
+            <!--  <ScrollViewer x:Name="scrollViewer">  -->
+            <ZoomAndPan:ZoomAndPanControl x:Name="zoomAndPanControl" Background="Transparent"
+                                          ContentScale="{Binding ZoomAndPanViewModel.ContentScale,
+                                                                 Mode=TwoWay}"
+                                          IsMouseWheelScrollingEnabled="False"
+                                          ViewportHeightInCC="{Binding ZoomAndPanViewModel.ViewportHeightInCC,
+                                                                       Mode=OneWayToSource}"
+                                          ViewportOffsetXInCC="{Binding ZoomAndPanViewModel.ViewportOffsetXInCC,
+                                                                        Mode=OneWayToSource}"
+                                          ViewportOffsetYInCC="{Binding ZoomAndPanViewModel.ViewportOffsetYInCC,
+                                                                        Mode=OneWayToSource}"
+                                          ViewportWidthInCC="{Binding ZoomAndPanViewModel.ViewportWidthInCC,
+                                                                      Mode=OneWayToSource}">
+                <!--
+                    <Canvas Width="1200" Height="800">
+                    <Rectangle Width="100" Height="100" Fill="Green"/>
+                    <Rectangle Width="100" Height="100" Canvas.Left="800" Canvas.Top="500" Fill="Brown"/>
+                    </Canvas>
+                -->
+
+                <ue:UmlCanvas x:Name="canvas"
+                              Width="{Binding ZoomAndPanViewModel.ContentWidth}"
+                              Height="{Binding ZoomAndPanViewModel.ContentHeight}"
+                              Background="#330000ff"
+                              Diagram="{Binding Diagram}"
+                              Focusable="True">
+                    <ue:UmlCanvas.Resources>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <Grid>
+                                            <Border Background="LightGoldenrodYellow" BorderBrush="Black"
+                                                    BorderThickness="2" CornerRadius="3">
+                                                <ScrollViewer x:Name="PART_ContentHost" />
+                                            </Border>
+                                            <Border Height="1" Margin="0,20,0,0"
+                                                    VerticalAlignment="Top" BorderBrush="Black"
+                                                    BorderThickness="0,1,0,0" />
+                                            <Border x:Name="connection" Width="20"
+                                                    Height="20" Margin="0,0,0,-10"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                                    Background="Gray" BorderBrush="Black"
+                                                    BorderThickness="2" CornerRadius="10"
+                                                    Visibility="Collapsed" />
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="connection" Property="Visibility" Value="Visible" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ue:UmlCanvas.Resources>
+                    <ue:UmlCanvas.Simulator>
+                        <gf:DiagramSimulator x:Name="simulator" />
+                    </ue:UmlCanvas.Simulator>
+                </ue:UmlCanvas>
+            </ZoomAndPan:ZoomAndPanControl>
+            <!--  </ScrollViewer>  -->
+        </Grid>
+
+        <controls:SingleChildToolBarTray Grid.Column="1">
+            <ToolBar x:Name="toolBar">
+                <Button>
+                    <Image Source="{StaticResource FolderOpenIcon}" Style="{DynamicResource ToolBarItemImageStyle}" />
+                </Button>
+                <Button Command="{Binding CopyDiagramToClipboardCommand, ElementName=canvas}">
+                    <Image Source="{StaticResource GeneralSaveIcon}" Style="{DynamicResource ToolBarItemImageStyle}" />
+                </Button>
+                <Controls:AutoCompleteBox x:Name="creatorAutoCompleteBox" VerticalAlignment="Top"
+                                          AcceptsReturn="True"
+                                          Text="{Binding CreatorText,
+                                                         ElementName=canvas,
+                                                         Mode=TwoWay,
+                                                         UpdateSourceTrigger=PropertyChanged}"
+                                          TextItemsSource="{Binding NodeNames,
+                                                                    ElementName=canvas}"
+                                          ToolBar.OverflowMode="Never">
+                    <Controls:AutoCompleteBox.Width>
+                        <Binding Converter="{Markup:AdditionConverter}"
+                                 ElementName="toolBar" Path="ActualWidth">
+                            <Binding.ConverterParameter>
+                                <sys:Double>-100</sys:Double>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Controls:AutoCompleteBox.Width>
+                </Controls:AutoCompleteBox>
+            </ToolBar>
+        </controls:SingleChildToolBarTray>
+
+        <Grid x:Name="canvasOverlayGrid" Grid.Row="1"
+              Grid.Column="1" Margin="0"
+              TextElement.Foreground="White">
+            <StackPanel Margin="10,10,0,0">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="IsHitTestVisible" Value="False" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="{Binding Fps, ElementName=canvas, StringFormat='FPS: {0}'}" />
+                <TextBlock Text="{Binding KineticEnergy, ElementName=canvas, StringFormat='Kinetic Energy: {0:f2}'}" />
+
+                <!--<TextBlock Margin="0,5,0,0" Text="{Binding ZoomAndPanViewModel.ViewportOffsetXInCC, StringFormat='ViewportOffsetXInCC: {0:f2}'}" />
+                <TextBlock Text="{Binding ZoomAndPanViewModel.ViewportOffsetYInCC, StringFormat='ViewportOffsetYInCC: {0:f2}'}" />
+
+                <TextBlock Text="{Binding ContentZoomFocusX, ElementName=zoomAndPanControl, StringFormat='ContentZoomFocusX: {0:f2}'}" />
+                <TextBlock Text="{Binding ContentZoomFocusY, ElementName=zoomAndPanControl, StringFormat='ContentZoomFocusY: {0:f2}'}" />
+
+                <TextBlock Text="{Binding ZoomAndPanViewModel.ViewportWidthInCC, StringFormat='ViewportWidthInCC: {0:f2}'}" />
+                <TextBlock Text="{Binding ZoomAndPanViewModel.ViewportHeightInCC, StringFormat='ViewportHeightInCC: {0:f2}'}" />-->
+
+                <TextBlock Text="{Binding ZoomAndPanViewModel.ContentScale, StringFormat='ContentScale: {0:f2}'}" />
+
+                <ToggleButton Height="36" Margin="0,10,0,0"
+                              HorizontalAlignment="Left" Content="Center nodes"
+                              IsChecked="{Binding CenterNodes,
+                                                  ElementName=simulator}" />
+
+                <ToggleButton x:Name="editToggleButton" Width="60"
+                              Margin="0,10,0,0" HorizontalAlignment="Left"
+                              HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              IsChecked="{Binding IsInEditMode,
+                                                  ElementName=canvas,
+                                                  Mode=TwoWay}">
+                    <ToggleButton.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Name="textBlock" Height="24"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="14" Text="Viewing"
+                                       TextTrimming="None" />
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=editToggleButton}" Value="True">
+                                    <Setter TargetName="textBlock" Property="Text" Value="Editing" />
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="blinkingBeginStoryboard">
+                                            <Storyboard>
+                                                <DoubleAnimationUsingKeyFrames Duration="00:00:01" RepeatBehavior="Forever"
+                                                                               Storyboard.TargetName="textBlock" Storyboard.TargetProperty="Opacity">
+                                                    <DiscreteDoubleKeyFrame KeyTime="0" Value="1" />
+                                                    <DiscreteDoubleKeyFrame KeyTime="00:00:00.5" Value="0" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                    <DataTrigger.ExitActions>
+                                        <RemoveStoryboard BeginStoryboardName="blinkingBeginStoryboard" />
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ToggleButton.ContentTemplate>
+
+                </ToggleButton>
+
+                <ToggleButton x:Name="playToggleButton" Margin="0,10,0,0"
+                              HorizontalAlignment="Left" HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              IsChecked="{Binding IsSimulating,
+                                                  ElementName=canvas,
+                                                  Mode=TwoWay,
+                                                  Converter={StaticResource InverseBooleanConverter}}">
+                    <ToggleButton.ContentTemplate>
+                        <DataTemplate>
+                            <Image x:Name="image" Width="24"
+                                   Height="24"
+                                   Source="{StaticResource MoviePlayIcon}" />
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=playToggleButton}" Value="True">
+                                    <Setter TargetName="image" Property="Source" Value="{StaticResource MoviePauseIcon}" />
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="blinkingBeginStoryboard">
+                                            <Storyboard>
+                                                <DoubleAnimationUsingKeyFrames Duration="00:00:01" RepeatBehavior="Forever"
+                                                                               Storyboard.TargetName="image" Storyboard.TargetProperty="Opacity">
+                                                    <DiscreteDoubleKeyFrame KeyTime="0" Value="1" />
+                                                    <DiscreteDoubleKeyFrame KeyTime="00:00:00.5" Value="0" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                    <DataTrigger.ExitActions>
+                                        <RemoveStoryboard BeginStoryboardName="blinkingBeginStoryboard" />
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ToggleButton.ContentTemplate>
+
+                </ToggleButton>
+
+                <TextBlock x:Name="currentOperationTextBlock" Margin="0,10,0,0" />
+            </StackPanel>
+
+            <!--  </Grid>  -->
+        </Grid>
+
+        <controls:SidebarExpander Grid.RowSpan="2">
+            <controls:SidebarExpander.Resources>
+                <Style BasedOn="{StaticResource {x:Type Slider}}" TargetType="Slider">
+                    <Setter Property="Width" Value="100" />
+                </Style>
+                <Style BasedOn="{StaticResource TextBoxStyle}" TargetType="TextBox" />
+            </controls:SidebarExpander.Resources>
+            <controls:SidebarExpander.Header>
+                <Label Content="Settings" FontSize="14"
+                       FontWeight="Bold" />
+            </controls:SidebarExpander.Header>
+            <ScrollViewer Margin="10" VerticalScrollBarVisibility="Auto">
+                <DockPanel Margin="5,10,5,10">
+                    <Grid DockPanel.Dock="Top">
+                        <Grid.RowDefinitions>
+                            <!--  AttractionConstant  -->
+                            <RowDefinition Height="Auto" />
+                            <!--  DefaultSpringLength  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  RepulsionConstant  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  DefaultRepulsionHorizon  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  DefaultDamping  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  LinkMomentConstant  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  NeighbourConnectorRepulsion  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  Snap Angle  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  LinkCrossingConstant  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  TimeSpeedFactor  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  S2SAttractionConstant  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  Preferred Angles  -->
+                            <RowDefinition Height="15" />
+                            <RowDefinition Height="Auto" />
+                            <!--  S2SRepulsionConstant  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  S2SRepulsionHorizon  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  Label: Between StateNode and WordNode  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  S2WAttractionConstant  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  S2WDefaultSpringLength  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  S2WRepulsionConstant  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <!--  S2WRepulsionHorizon  -->
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="60" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  ==================================================================================  -->
+                        <!--
+                            <Label Grid.Row="8" Grid.ColumnSpan="5"
+                            Content="Settings" DockPanel.Dock="Top"
+                            FontSize="14" FontWeight="Bold" />
+                        -->
+
+                        <Label Grid.Row="0" VerticalAlignment="Center"
+                               Content="AttractionConstant" />
+                        <Slider x:Name="attractionConstantSlider" Grid.Row="0"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="1"
+                                Value="{Binding AttractionConstant,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="attractionConstantTextBox" Grid.Row="0"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=attractionConstantSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="2" VerticalAlignment="Center"
+                               Content="DefaultSpringLength" />
+                        <Slider x:Name="defaultSpringLengthSlider" Grid.Row="2"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="100"
+                                Value="{Binding DefaultSpringLength,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="defaultSpringLengthTextBox" Grid.Row="2"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=defaultSpringLengthSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="4" VerticalAlignment="Center"
+                               Content="RepulsionConstant" />
+                        <Slider x:Name="repulsionConstantSlider" Grid.Row="4"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="10000000"
+                                Value="{Binding RepulsionConstant,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="repulsionConstantTextBox" Grid.Row="4"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=repulsionConstantSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="6" VerticalAlignment="Center"
+                               Content="DefaultRepulsionHorizon" />
+                        <Slider x:Name="defaultRepulsionHorizonSlider" Grid.Row="6"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="1000"
+                                Value="{Binding DefaultRepulsionHorizon,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="defaultRepulsionHorizonTextBox" Grid.Row="6"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=defaultRepulsionHorizonSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="8" VerticalAlignment="Center"
+                               Content="DefaultDamping" />
+                        <Slider x:Name="defaultDampingSlider" Grid.Row="8"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="1"
+                                Value="{Binding DefaultDamping,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="defaultDampingTextBox" Grid.Row="8"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=defaultDampingSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="10" VerticalAlignment="Center"
+                               Content="LinkMomentConstant" />
+                        <Slider x:Name="linkMomentConstantSlider" Grid.Row="10"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="0.1"
+                                Value="{Binding LinkMomentConstant,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="linkMomentConstantTextBox" Grid.Row="10"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=linkMomentConstantSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="12" VerticalAlignment="Center"
+                               Content="NeighbourConnectorRepulsion" />
+                        <Slider x:Name="neighbourConnectorRepulsionSlider" Grid.Row="12"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="1000"
+                                Value="{Binding NeighbourConnectorRepulsion,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="neighbourConnectorRepulsionTextBox" Grid.Row="12"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=neighbourConnectorRepulsionSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="14" VerticalAlignment="Center"
+                               Content="Snap Angle" />
+                        <Slider x:Name="snapAngleSlider" Grid.Row="14"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="45"
+                                Value="{Binding SnapAngle,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="snapAngleTextBox" Grid.Row="14"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=snapAngleSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <!--
+                            <Label Grid.Row="16" VerticalAlignment="Center"
+                            Content="LinkCrossingConstant" />
+                            <Slider x:Name="linkCrossingConstantSlider" Grid.Row="16"
+                            Grid.Column="2" VerticalAlignment="Center"
+                            Maximum="10"
+                            Value="{Binding LinkCrossingConstant,
+                            ElementName=simulator,
+                            Mode=TwoWay}" />
+                            <TextBox x:Name="linkCrossingConstantTextBox" Grid.Row="16"
+                            Grid.Column="4" VerticalAlignment="Center"
+                            Text="{Binding Value,
+                            ElementName=linkCrossingConstantSlider,
+                            Mode=TwoWay,
+                            StringFormat=f2}" />
+                        -->
+
+                        <Label Grid.Row="16" VerticalAlignment="Center"
+                               Content="Node2LinkRepulsion" />
+                        <Slider x:Name="node2LinkRepulsionSlider" Grid.Row="16"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="200"
+                                Value="{Binding Node2LinkRepulsion,
+                                                ElementName=simulator,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="node2LinkRepulsionTextBox" Grid.Row="16"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=node2LinkRepulsionSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+
+                        <Label Grid.Row="18" VerticalAlignment="Center"
+                               Content="TimeSpeedFactor" />
+                        <Slider x:Name="timeSpeedFactorSlider" Grid.Row="18"
+                                Grid.Column="2" VerticalAlignment="Center"
+                                Maximum="100"
+                                Value="{Binding TimeSpeedFactor,
+                                                ElementName=canvas,
+                                                Mode=TwoWay}" />
+                        <TextBox x:Name="timeSpeedFactorTextBox" Grid.Row="18"
+                                 Grid.Column="4" VerticalAlignment="Center"
+                                 Text="{Binding Value,
+                                                ElementName=timeSpeedFactorSlider,
+                                                Mode=TwoWay,
+                                                StringFormat=f2}" />
+                        <Button Grid.Row="20" Grid.Column="4"
+                                Command="{Binding StepCommand,
+                                                  ElementName=canvas}"
+                                Content="Step" />
+
+                        <Label Grid.Row="22" VerticalAlignment="Center"
+                               Content="Preferred Angles for Inheritance" />
+                        <TextBox x:Name="preferredAnglesForInheritanceTextBox" Grid.Row="22"
+                                 Grid.Column="2" Grid.ColumnSpan="3"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding InheritanceRelationPreferredAngles,
+                                                ElementName=canvas,
+                                                Mode=TwoWay}" />
+
+                        <Label Grid.Row="24" VerticalAlignment="Center"
+                               Content="Preferred Angles for Aggregation" />
+                        <TextBox x:Name="preferredAnglesForAggregationTextBox" Grid.Row="24"
+                                 Grid.Column="2" Grid.ColumnSpan="3"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding AggregationRelationPreferredAngles,
+                                                ElementName=canvas,
+                                                Mode=TwoWay}" />
+
+                        <Label Grid.Row="26" VerticalAlignment="Center"
+                               Content="Preferred Angles for Composition" />
+                        <TextBox x:Name="preferredAnglesForCompositionTextBox" Grid.Row="26"
+                                 Grid.Column="2" Grid.ColumnSpan="3"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding CompositionRelationPreferredAngles,
+                                                ElementName=canvas,
+                                                Mode=TwoWay}" />
+
+                        <Label Grid.Row="28" VerticalAlignment="Center"
+                               Content="Preferred Angles for Association" />
+                        <TextBox x:Name="preferredAnglesForAssociationTextBox" Grid.Row="28"
+                                 Grid.Column="2" Grid.ColumnSpan="3"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding AssociationRelationPreferredAngles,
+                                                ElementName=canvas,
+                                                Mode=TwoWay}" />
+
+                        <CheckBox x:Name="drawForcesCheckBox" Grid.Row="30"
+                                  Margin="5,10,0,0" HorizontalAlignment="Left"
+                                  VerticalAlignment="Center" Content="Draw forces"
+                                  IsChecked="{Binding DrawsForces,
+                                                      ElementName=canvas,
+                                                      Mode=TwoWay}"
+                                  Style="{StaticResource CheckBoxStyle}" />
+
+                        <!--
+                            <CheckBox x:Name="drawLinkLabelsCheckBox" Grid.Row="32"
+                            Margin="5,10,0,0" HorizontalAlignment="Left"
+                            VerticalAlignment="Center" Content="Draw linklabels"
+                            IsChecked="{Binding DrawLinkLabels,
+                            ElementName=canvas,
+                            Mode=TwoWay}"
+                            Style="{StaticResource CheckBoxStyle}" />
+                        -->
+
+                        <TextBox x:Name="filterTextBox" Grid.Row="32"
+                                 Grid.ColumnSpan="5" Margin="0,20,0,0"
+                                 Text="{Binding FilterText,
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged,
+                                                ElementName=canvas}" />
+
+                    </Grid>
+                </DockPanel>
+            </ScrollViewer>
+        </controls:SidebarExpander>
+    </Grid>
+</Window>

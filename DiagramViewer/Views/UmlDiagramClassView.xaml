@@ -1,0 +1,329 @@
+﻿<UserControl x:Class="DiagramViewer.Views.UmlDiagramClassView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:Converters="clr-namespace:DiagramViewer.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Markup="clr-namespace:DiagramViewer.MarkupExtensions"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:Models="clr-namespace:DiagramViewer.Models"
+             xmlns:controls="clr-namespace:DiagramViewer.Controls"
+             MaxWidth="300"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Converters:AccessModifierToStringConverter x:Key="AccessModifierToStringConverter" />
+        <Converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="UmlClassMemberListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Visibility" Value="{Binding IsVisibleInList, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Grid>
+                            <Border x:Name="selectionBorder"
+                                    Background="Black"
+                                    Opacity="0" />
+                            <ContentPresenter />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="selectionBorder" Property="Opacity" Value="0.3" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="UmlClassMembersListBoxStyle" TargetType="{x:Type ListBox}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="ItemContainerStyle" Value="{StaticResource UmlClassMemberListBoxItemStyle}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBox}">
+                        <ScrollViewer>
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Private members"
+                      IsCheckable="True"
+                      IsChecked="{Binding ShowsPrivateMembers,
+                                          Mode=TwoWay}" />
+            <MenuItem Header="Protected members"
+                      IsCheckable="True"
+                      IsChecked="{Binding ShowsProtectedMembers,
+                                          Mode=TwoWay}" />
+            <MenuItem Header="Internal members"
+                      IsCheckable="True"
+                      IsChecked="{Binding ShowsInternalMembers,
+                                          Mode=TwoWay}" />
+            <MenuItem Header="Public members"
+                      IsCheckable="True"
+                      IsChecked="{Binding ShowsPublicMembers,
+                                          Mode=TwoWay}" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+
+    <Grid>
+        <Border Background="{Binding BackgroundBrush}"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CornerRadius="4">
+            <Grid x:Name="mainGrid" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                  
+                <!--  <StackPanel Margin="5">  -->
+                <TextBlock x:Name="t1"
+                           HorizontalAlignment="Center"
+                           Text="{Binding StereoType}"
+                           Visibility="{Binding StereoType,
+                                                Converter={StaticResource NullToVisibilityConverter}}" />
+                <DockPanel Grid.Row="1">
+                    <Button Style="{StaticResource CloseButtonStyle}" Command="{Binding CloseCommand}" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="2,-4,-4,-4"/>
+                    <TextBlock x:Name="t2"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="SemiBold">
+                    <TextBlock.Inlines>
+                        <Run Text="{Binding Name, Mode=OneWay}" />
+                    </TextBlock.Inlines>
+                    </TextBlock>
+                </DockPanel>
+                <Grid x:Name="membersGrid"
+                      Grid.Row="2"
+                      Visibility="{Binding ShowsMembers,
+                                           Converter={Markup:BooleanToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Height="1"
+                            Margin="-5,5"
+                            BorderBrush="Black"
+                            BorderThickness="0,1,0,0" />
+                    <Expander x:Name="e1"
+                              Grid.Row="1"
+                              Header="Attributes"
+                              Visibility="{Binding HasAttributes,
+                                                   Converter={Markup:BooleanToVisibilityConverter}}">
+                        <Expander.Resources>
+                            <CollectionViewSource x:Key="AttributeCvs" Source="{Binding Attributes}">
+                                <CollectionViewSource.SortDescriptions>
+                                    <ComponentModel:SortDescription PropertyName="AccessModifier" />
+                                    <ComponentModel:SortDescription PropertyName="Name" />
+                                </CollectionViewSource.SortDescriptions>
+                            </CollectionViewSource>
+                        </Expander.Resources>
+                        <ListBox MaxHeight="300"
+                                 ItemsSource="{Binding Source={StaticResource AttributeCvs},
+                                                       Mode=OneTime}"
+                                 Style="{StaticResource UmlClassMembersListBoxStyle}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel>
+                                        <TextBlock x:Name="accessModifierTextBlock"
+                                                   Width="10"
+                                                   HorizontalAlignment="Center"
+                                                   Text="{Binding AccessModifier,
+                                                                  Converter={StaticResource AccessModifierToStringConverter}}" />
+                                        <TextBlock x:Name="nameTextBlock" Text="{Binding Name}" />
+                                        <TextBlock x:Name="colonTextBlock" Text=" : " />
+                                        <TextBlock x:Name="typeTextBlock" Text="{Binding Type}" />
+                                    </DockPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="{x:Null}">
+                                            <Setter TargetName="colonTextBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="typeTextBlock" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding AccessModifier}" Value="{x:Static Models:AccessModifier.None}">
+                                            <Setter TargetName="accessModifierTextBlock" Property="Visibility" Value="Hidden" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Expander>
+                    <Border Grid.Row="2"
+                            Height="1"
+                            Margin="-5,5"
+                            BorderBrush="Black"
+                            BorderThickness="0,1,0,0" />
+                    <Expander x:Name="e2"
+                              Grid.Row="3"
+                              Header="Properties"
+                              Visibility="{Binding HasProperties,
+                                                   Converter={Markup:BooleanToVisibilityConverter}}">
+                        <Expander.Resources>
+                            <CollectionViewSource x:Key="PropertyCvs" Source="{Binding Properties}">
+                                <CollectionViewSource.SortDescriptions>
+                                    <ComponentModel:SortDescription PropertyName="Name" />
+                                </CollectionViewSource.SortDescriptions>
+                            </CollectionViewSource>
+                        </Expander.Resources>
+                        <ListBox MaxHeight="300"
+                                 ItemsSource="{Binding Source={StaticResource PropertyCvs},
+                                                       Mode=OneTime}"
+                                 Style="{StaticResource UmlClassMembersListBoxStyle}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel>
+                                        <TextBlock x:Name="nameTextBlock"
+                                                   Margin="10,0,0,0"
+                                                   Text="{Binding Name}" />
+                                        <TextBlock x:Name="openBracket" Text=" { " />
+                                        <TextBlock x:Name="getterAccessModifierTextBlock" Text="{Binding GetterAccessModifier, Converter={StaticResource AccessModifierToStringConverter}}" />
+                                        <TextBlock x:Name="getLabel" Text="get;" />
+                                        <TextBlock x:Name="setterAccessModifierTextBlock" Text="{Binding SetterAccessModifier, Converter={StaticResource AccessModifierToStringConverter}}" />
+                                        <TextBlock x:Name="setLabel" Text="set;" />
+                                        <TextBlock x:Name="closeBracket" Text=" }" />
+                                        <TextBlock x:Name="colonTextBlock" Text=" : " />
+                                        <TextBlock x:Name="typeTextBlock" Text="{Binding Type}" />
+                                    </DockPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="{x:Null}">
+                                            <Setter TargetName="colonTextBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="typeTextBlock" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding GetterAccessModifier}" Value="{x:Static Models:AccessModifier.None}">
+                                            <Setter TargetName="getterAccessModifierTextBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="getLabel" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SetterAccessModifier}" Value="{x:Static Models:AccessModifier.None}">
+                                            <Setter TargetName="setterAccessModifierTextBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="setLabel" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding GetterAccessModifier}" Value="{x:Static Models:AccessModifier.None}" />
+                                                <Condition Binding="{Binding SetterAccessModifier}" Value="{x:Static Models:AccessModifier.None}" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="getterAccessModifierTextBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="getLabel" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="setterAccessModifierTextBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="setLabel" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="openBracket" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="closeBracket" Property="Visibility" Value="Collapsed" />
+                                        </MultiDataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Expander>
+                    <Border Grid.Row="4"
+                            Height="1"
+                            Margin="-5,5"
+                            BorderBrush="Black"
+                            BorderThickness="0,1,0,0" />
+                    <Expander x:Name="e3"
+                              Grid.Row="5"
+                              Header="Operations"
+                              Visibility="{Binding HasOperations,
+                                                   Converter={Markup:BooleanToVisibilityConverter}}">
+                        <Expander.Resources>
+                            <CollectionViewSource x:Key="OperationCvs" Source="{Binding Operations}">
+                                <CollectionViewSource.SortDescriptions>
+                                    <ComponentModel:SortDescription PropertyName="AccessModifier" />
+                                    <ComponentModel:SortDescription PropertyName="Name" />
+                                </CollectionViewSource.SortDescriptions>
+                            </CollectionViewSource>
+                        </Expander.Resources>
+                        <ListBox MaxHeight="300"
+                                 ItemsSource="{Binding Source={StaticResource OperationCvs},
+                                                       Mode=OneTime}"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 SelectionMode="Multiple"
+                                 Style="{StaticResource UmlClassMembersListBoxStyle}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <DockPanel>
+                                            <TextBlock x:Name="accessModifierTextBlock" Text="{Binding AccessModifier, Converter={StaticResource AccessModifierToStringConverter}}" />
+                                            <TextBlock x:Name="nameTextBlock" Text="{Binding Name}" />
+                                            <TextBlock x:Name="parenthesisTextBlock" Text="( )" />
+                                            <TextBlock x:Name="colonTextBlock" Text=" : " />
+                                            <TextBlock x:Name="typeTextBlock" Text="{Binding Type}" />
+                                        </DockPanel>
+                                        <controls:CropBox x:Name="cropBox" CropFactor="1" Grid.Row="1" Margin="3">
+                                            <TextBox x:Name="bodyTextBox"
+                                                     FontSize="8"
+                                                     Text="{Binding BodyString,
+                                                                    Mode=OneWay}"
+                                                     TextWrapping="Wrap" />
+                                        </controls:CropBox>
+                                    </Grid>
+
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Duration="00:00:00.1"
+                                                                         Storyboard.TargetName="cropBox"
+                                                                         Storyboard.TargetProperty="CropFactor"
+                                                                         To="0" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                            <DataTrigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Duration="00:00:00.1"
+                                                                         Storyboard.TargetName="cropBox"
+                                                                         Storyboard.TargetProperty="CropFactor"
+                                                                         To="1" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.ExitActions>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="{x:Null}">
+                                            <Setter TargetName="colonTextBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="typeTextBlock" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding AccessModifier}" Value="{x:Static Models:AccessModifier.None}">
+                                            <Setter TargetName="accessModifierTextBlock" Property="Visibility" Value="Hidden" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Expander>
+                </Grid>
+                <!--
+                    <TextBlock Margin="5,0,5,5" HorizontalAlignment="Center"
+                    Foreground="Black">
+                    <TextBlock.Text>
+                    <MultiBinding StringFormat="pos: ({0:f0},{1:f0})">
+                    <MultiBinding.Bindings>
+                    <Binding Path="(Canvas.Left)" RelativeSource="{RelativeSource AncestorType={x:Type uml:UmlClassControl}}" />
+                    <Binding Path="(Canvas.Top)" RelativeSource="{RelativeSource AncestorType={x:Type uml:UmlClassControl}}" />
+                    </MultiBinding.Bindings>
+                    </MultiBinding>
+                    </TextBlock.Text>
+                    </TextBlock>
+                -->
+                <!--  </StackPanel>  -->
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

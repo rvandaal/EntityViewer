@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DrawingImage x:Key="MoviePlayIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1 M 64,64L 0,64L 0,0L 64,0L 64,64 Z "/>
+                    <GeometryDrawing Geometry="F1 M 1.44,7.17467C 1.16533,7.36267 1,7.672 1,8.004L 1,55.996C 1,56.328 1.16533,56.6387 1.44,56.824L 1.44,56.824C 1.608,56.9387 1.80267,56.996 2,56.996L 2,56.996C 2.12533,56.996 2.25067,56.9733 2.37067,56.9253L 62.3707,32.936C 62.752,32.784 63,32.4173 63,32.008L 63,32.008C 63,31.5987 62.752,31.232 62.3707,31.0787L 2.37067,7.076C 2.25067,7.028 2.12533,7.004 2,7.004L 2,7.004C 1.80267,7.004 1.608,7.06267 1.44,7.17467 Z ">
+                        <GeometryDrawing.Brush>
+                            <LinearGradientBrush StartPoint="0.499989,0.17767" EndPoint="0.499989,0.94412">
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStop Color="#FFDDD9D5" Offset="0"/>
+                                    <GradientStop Color="#FFDDD9D5" Offset="0.333328"/>
+                                    <GradientStop Color="#FFCCC7C4" Offset="0.72728"/>
+                                    <GradientStop Color="#FFCCC7C4" Offset="1"/>
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+                        </GeometryDrawing.Brush>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF2E2626" Geometry="F1 M 2,6.00386C 1.60667,6.00386 1.21467,6.11987 0.878667,6.34787C 0.329333,6.71987 0,7.33987 0,8.00386L 0,55.9959C 0,56.6599 0.329333,57.2799 0.878667,57.6519C 1.21467,57.8785 1.60667,57.9959 2,57.9959C 2.25067,57.9959 2.50267,57.9492 2.74267,57.8532L 62.7427,33.8652C 63.5013,33.5612 64,32.8265 64,32.0079C 64,31.1905 63.5027,30.4545 62.744,30.1505L 2.74267,6.14653C 2.50267,6.05186 2.25067,6.00386 2,6.00386 Z M 2,8.00386L 62,32.0079L 2,55.9959L 2,8.00386 Z "/>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+</ResourceDictionary>

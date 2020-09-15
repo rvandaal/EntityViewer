@@ -1,0 +1,39 @@
+﻿Sequence:
+CompositionManager redraw:
+Kan op elk niveau binnenkomen aangezien het een 'static event' is. Nodes zouden er ook op kunnen inschrijven.
+In principe op UmlCanvas niveau. Als de UmlDiagramControl een andere Panel zou gebruiken zou dit event namelijk niet nodig zijn.
+Dit impliceert dat we alle functionaliteit omtrent met 60 FPS tekenen in de UmlCanvas zouden moeten stoppen.
+Kopieeren van UmlClass.Pos.X naar itemcontainer.Left:
+- Kent UmlCanvas de itemcontainers? In principe heeft hij Children, dit zijn UIElements, niet ItemContainers
+- Kent UmlCanvas de UmlClassControls? Nee die zou hij helemaal niet mogen kennen.
+ItemContainers hebben het niveau van canvas
+UmlClassControls hebben het niveau van UmlDiagramControls. 
+
+Hoe geeft een UmlClass zijn nieuwe positie door aan de betreffende ItemContainer? :|
+Hij is al aangemaakt dus niet in PrepareItemContainerOverrideBla.
+
+Waarom zou ik een UmlDiagramControl aanmaken? Een custom ListBox dus. Heb ik selectie nodig? En nog belangrijker:
+heb ik ItemContainers nodig? Ja, ik kan bv een adorner eromheen tekenen als hij geselecteerd is.
+Ook belangrijk: een ListBox zorgt voor het aanmaken van de itemcontainers, en doet dit automatisch als de ItemSource verandert.
+
+UmlClassControl wordt gemaakt vanuit een DataTemplate met DataType=UmlClassViewModel.
+Ja, toch wel handig zo'n custom ListBox.
+Oooo, in de PrepareItemContainer zouden we een binding kunnen maken tussen ItemContainer.Left en UmlClassViewModel.Pos.X.
+
+Volgende probleem: hoe gaan we de links tekenen? Deze wil ik ook interactief maken, dus een shape is gewenst. Moet er een baseclass komen voor
+links en nodes zodat ik een collectie van die baseclass aan de UmlDiagramControl kan binden? Denk het wel want het blijft wellicht niet bij UmlClass en UmlRelations.
+
+Is het zo dat controllers per definitie app specifiek zijn en dus niet herbruikbaar? Alleen binnen 1 applicatie dan.
+
+Voorbeeld: ik wil deze simulator ook gaan gebruiken voor NLP applicaties. Hierin komt helemaal geen Uml voor. Wel is de simulator en alle settings nodig.
+Dit betekent dat de Simulator zich iig niet in de UmlViewer assembly mag bevinden. En ook niet de VM + View.
+
+Een controller ownt het datamodel en beheert deze. Vraag is wat een datamodel is (=wat we willen persisteren):
+- Het UmlModel bevat alle classes en relaties binnen een bepaalde solution. Hierop zijn vervolgens views mogelijk die ook filtering toepassen.
+- De settings van de verschillende views moet ook gepersisteerd worden. Maar dit zijn app specifieke settings. Het UmlModel zelf zou ook nog in een andere
+  applicatie geopend kunnen worden.
+
+  In SurePlan heb je ook TaskControllers die de settings beheren en DataControllers die het DataModel beheren. Alle settings hangen uiteindelijk onder een Session.
+  De ViewModels zijn echter specifiek voor een bepaalde view en hangen dus niet 1 op 1 aan een datacontroller.
+
+  Leuk: als een class sealed is mag je ook geen inheritance connector zien als je een link aan het draggen bent.

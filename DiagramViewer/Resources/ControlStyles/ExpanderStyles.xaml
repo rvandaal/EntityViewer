@@ -1,0 +1,304 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="clr-namespace:DiagramViewer.Controls">
+
+
+    <!-- Generic styles used by all buttons styles -->
+    <Style x:Key="ExpanderFocusStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Stroke="{DynamicResource GeneralFocusBrush}"
+                        StrokeThickness="1" StrokeDashArray="1 2"
+                        RadiusX="2" RadiusY="2"
+                        Margin="2"
+                        SnapsToDevicePixels="True"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- The durations of the expander's expand and collapse animations. -->
+    <Duration x:Key="ExpanderExpandDuration">00:00:00.2</Duration>
+    <Duration x:Key="ExpanderCollapseDuration">00:00:00.2</Duration>
+    <!-- Key times corresponding to the durations of the expander's expand and collapse animations. -->
+    <KeyTime x:Key="ExpanderExpandKeyTime">00:00:00.2</KeyTime>
+    <KeyTime x:Key="ExpanderCollapseKeyTime">00:00:00.2</KeyTime>
+
+    <!-- ChevronMouseEnterStoryboard
+         The storyboard for the animation that is played when the mouse enters the expander chevron. -->
+    <Storyboard x:Key="ChevronMouseEnterStoryboard">
+        <DoubleAnimation 
+            Storyboard.TargetName="chevronMouseOver"
+            Storyboard.TargetProperty="Opacity"
+            To="1"
+            Duration="00:00:00.1"/>
+    </Storyboard>
+
+    <!-- ChevronMouseLeaveStoryboard
+         The storyboard for the animation that is played when the mouse leaves the expander chevron. -->
+    <Storyboard x:Key="ChevronMouseLeaveStoryboard">
+        <DoubleAnimation 
+            Storyboard.TargetName="chevronMouseOver"
+            Storyboard.TargetProperty="Opacity"
+            To="0"
+            Duration="00:00:00.2"/>
+    </Storyboard>
+
+    <!-- ChevronExpandStoryboard
+         Storyboard that animates the expanding of the chevron.
+         The chevron will change its orientation from pointing downwards to pointing upwards,
+         making a 180° rotation. -->
+    <Storyboard x:Key="ChevronExpandStoryboard">
+        <DoubleAnimationUsingKeyFrames
+            Storyboard.TargetName="expanderIconGrid"
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"
+            Duration="{StaticResource ExpanderExpandDuration}">
+            <SplineDoubleKeyFrame
+                Value="0"
+                KeyTime="0"/>
+            <SplineDoubleKeyFrame
+                Value="180"
+                KeyTime="{StaticResource ExpanderExpandKeyTime}"
+                KeySpline="0,0.5,0.5,1"/>
+        </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <!-- ChevronCollapseStoryboard
+         Storyboard that animates the collapsing of the chevron.
+         The chevron will changes its orientation from pointing upwards to pointing downwards,
+         making a 180° rotation. -->
+    <Storyboard x:Key="ChevronCollapseStoryboard">
+        <DoubleAnimationUsingKeyFrames
+            Storyboard.TargetName="expanderIconGrid"
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"
+            Duration="{StaticResource ExpanderCollapseDuration}">
+            <SplineDoubleKeyFrame
+                Value="180"
+                KeyTime="0"/>
+            <SplineDoubleKeyFrame
+                Value="0"
+                KeyTime="{StaticResource ExpanderCollapseKeyTime}"
+                KeySpline="0,0.5,0.5,1"/>
+        </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <!-- ExpandAnimationStoryboard
+         Storyboard that animates the expanding of the expander (more precisely, of the crop box
+         used by the expander). -->
+    <Storyboard x:Key="ExpandAnimationStoryboard">
+        <DoubleAnimationUsingKeyFrames
+            Storyboard.TargetName="expanderCropBox"
+            Storyboard.TargetProperty="CropFactor"
+            BeginTime="0">
+            <SplineDoubleKeyFrame 
+                Value="0"
+                KeyTime="{StaticResource ExpanderExpandKeyTime}"
+                KeySpline="0,0.5,0.5,1"/>
+        </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <!-- CollapseAnimationStoryboard
+         Storyboard that animates the collapsing of the expander (more precisely, of the crop box
+         used by the expander). -->
+    <Storyboard x:Key="CollapseAnimationStoryboard">
+        <DoubleAnimationUsingKeyFrames 
+            Storyboard.TargetName="expanderCropBox"
+            Storyboard.TargetProperty="CropFactor"
+            BeginTime="0">
+            <SplineDoubleKeyFrame 
+                Value="1"
+                KeyTime="{StaticResource ExpanderCollapseKeyTime}"
+                KeySpline="0,0.5,0.5,1"/>
+        </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <Style x:Key="ExpanderDownHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <!--<Setter Property="BorderBrush" Value="{DynamicResource PanelHighlightBrush}"/>
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>-->
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border x:Name="background"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid x:Name="expanderIconGrid"
+                                Grid.Column="1"
+                                Margin="7,3,9,3" VerticalAlignment="Center"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="0"/>
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Path x:Name="chevron"
+                                    Data="{DynamicResource ExpanderChevronGeometry}"
+                                    Fill="{DynamicResource ButtonBackgroundBrush}"
+                                    Width="{DynamicResource ExpanderChevronWidth}"
+                                    Height="{DynamicResource ExpanderChevronHeight}"
+                                    Stretch="Fill"/>
+                                <Path x:Name="chevronMouseOver"
+                                    Opacity="0"
+                                    Data="{DynamicResource ExpanderChevronGeometry}"
+                                    Fill="{DynamicResource ButtonMouseOverBrush}"
+                                    Width="{DynamicResource ExpanderChevronWidth}"
+                                    Height="{DynamicResource ExpanderChevronHeight}"
+                                    Stretch="Fill"/>
+                            </Grid>
+                            <ContentPresenter x:Name="headerContentPresenter"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard
+                                    Storyboard="{StaticResource ChevronMouseEnterStoryboard}"/>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard
+                                    Storyboard="{StaticResource ChevronMouseLeaveStoryboard}"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <!--<Setter TargetName="chevron" Property="Fill"
+                                Value="{DynamicResource ExpanderUpHeaderChevronBrush}"/>
+                            <Setter TargetName="chevronMouseOver" Property="Fill"
+                                Value="{DynamicResource ExpanderUpMouseOverHeaderChevronBrush}"/>-->
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="iconExpandBeginStoryboard"
+                                    Storyboard="{StaticResource ChevronExpandStoryboard}"/>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard
+                                    Storyboard="{StaticResource ChevronCollapseStoryboard}"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <!--<Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="chevron" Property="Fill" Value="{DynamicResource ExpanderHeaderChevronDisabledBrush}"/>
+                        </Trigger>-->
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            <SkipStoryboardToFill BeginStoryboardName="iconExpandBeginStoryboard"/>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ExpanderHeaderTextDisabledBrush}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ExpanderStyle -->
+    <!-- Background of the ToggleButton is not TemplateBound with Background, because this local
+        value would have precedence over the style setter in the header styles -->
+    <Style x:Key="ExpanderStyle" TargetType="{x:Type Expander}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <!--<Setter Property="Foreground" Value="{DynamicResource ExpanderHeaderTextBrush}"/>-->
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="Padding" Value="9,0,9,9"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Grid>
+                        <!--<Border x:Name="outlineExpand"
+                            Background="{DynamicResource GeneralOutlineBrush}"
+                            CornerRadius="4"/>-->
+                        <Border x:Name="backgroundExpand"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="3"
+                            Margin="1"/>
+                        <DockPanel>
+                            <!-- The header of the expander is modeled as a toggle button.
+                                 By default, the expand direction is down, which means we have to apply
+                                 the ExpanderDownHeaderStyle to the toggle button. The style for the
+                                 other expand directions is taken care of by triggers below.
+                            -->
+                            <ToggleButton x:Name="headerSite"
+                                DockPanel.Dock="Top"
+                                Style="{DynamicResource ExpanderDownHeaderStyle}"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                ContentStringFormat="{TemplateBinding HeaderStringFormat}"
+                                Padding="9,3" Margin="1"
+                                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                FocusVisualStyle="{StaticResource ExpanderFocusStyle}"/>
+                            <Controls:CropBox x:Name="expanderCropBox" CropFactor="1">
+                                <ContentPresenter x:Name="expanderContentPresenter"
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Controls:CropBox>
+                        </DockPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            <SkipStoryboardToFill BeginStoryboardName="expandBeginStoryboard"/>
+                        </EventTrigger>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="expandBeginStoryboard"
+                                    Storyboard="{StaticResource ExpandAnimationStoryboard}"/>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard
+                                    Storyboard="{StaticResource CollapseAnimationStoryboard}"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Right">
+                            <Setter TargetName="expanderCropBox" Property="CropSide" Value="Left"/>
+                            <Setter TargetName="headerSite" Property="DockPanel.Dock" Value="Left"/>
+                            <Setter TargetName="headerSite" Property="Style" Value="{DynamicResource ExpanderRightHeaderStyle}"/>
+                            <Setter Property="Padding" Value="0,9,9,9"/>
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Up">
+                            <Setter TargetName="expanderCropBox" Property="CropSide" Value="Bottom"/>
+                            <Setter TargetName="headerSite" Property="DockPanel.Dock" Value="Bottom"/>
+                            <Setter TargetName="headerSite" Property="Style" Value="{DynamicResource ExpanderUpHeaderStyle}"/>
+                            <Setter Property="Padding" Value="9,9,9,0"/>
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Left">
+                            <Setter TargetName="expanderCropBox" Property="CropSide" Value="Right"/>
+                            <Setter TargetName="headerSite" Property="DockPanel.Dock" Value="Right"/>
+                            <Setter TargetName="headerSite" Property="Style" Value="{DynamicResource ExpanderLeftHeaderStyle}"/>
+                            <Setter Property="Padding" Value="9,9,0,9"/>
+                        </Trigger>
+                        <Trigger Property="CropFactor" Value="1" SourceName="expanderCropBox">
+                            <Setter TargetName="expanderCropBox" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                        <!--<Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="outlineExpand" Property="Background" Value="{DynamicResource ExpanderPanelBorderDisabledBrush}"/>
+                        </Trigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource ExpanderHeaderTextDisabledBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

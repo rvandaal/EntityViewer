@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ImageStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    <Style x:Key="ToolBarItemImageStyle"
+           BasedOn="{StaticResource ImageStyle}"
+           TargetType="{x:Type Image}">
+        <Setter Property="Width" Value="{DynamicResource ToolBarItemImageWidth}" />
+        <Setter Property="Height" Value="{DynamicResource ToolBarItemImageHeight}" />
+    </Style>
+</ResourceDictionary>

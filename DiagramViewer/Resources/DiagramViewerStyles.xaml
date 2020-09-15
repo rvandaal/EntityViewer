@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Controls="clr-namespace:DiagramViewer.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ControlStyles/AutoCompleteBoxStyles.xaml"/>
+        <ResourceDictionary Source="ControlStyles/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="ControlStyles/ExpanderStyles.xaml" />
+        <ResourceDictionary Source="ControlStyles/General.xaml" />
+        <ResourceDictionary Source="ControlStyles/ImageStyles.xaml" />
+        <ResourceDictionary Source="ControlStyles/ToolBarStyles.xaml" />
+        <ResourceDictionary Source="ControlStyles/ViewAreaStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <Style TargetType="{x:Type Controls:AutoCompleteBox}" BasedOn="{StaticResource AutoCompleteBoxStyle}"/>
+    <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource ExpanderStyle}"/>
+    <Style TargetType="{x:Type Controls:ViewArea}" BasedOn="{StaticResource ViewAreaStyle}"/>
+    <Style TargetType="{x:Type Controls:Viewport}" BasedOn="{StaticResource ViewportStyle}"/>
+</ResourceDictionary>

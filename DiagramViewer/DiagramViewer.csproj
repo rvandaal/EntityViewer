@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1D6C3AF1-CD4C-4CB3-AE22-738DA6CCAE10}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DiagramViewer</RootNamespace>
+    <AssemblyName>DiagramViewer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.Decompiler">
+      <HintPath>..\packages\ICSharpCode.Decompiler.2.3.1\lib\Net40\ICSharpCode.Decompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.6, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Cecil">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp, Version=5.0.0.6, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Xml, Version=5.0.0.6, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AssemblyExtensions.cs" />
+    <Compile Include="CompositionTargetEx.cs" />
+    <Compile Include="Controls\AutoCompleteBox.cs" />
+    <Compile Include="Controls\CropBox.cs" />
+    <Compile Include="Controls\DiagramCanvas.cs" />
+    <Compile Include="Controls\PopupPlacement.cs" />
+    <Compile Include="Controls\Side.cs" />
+    <Compile Include="Controls\SingleChildToolBarTray.cs" />
+    <Compile Include="Converters\AccessModifierToStringConverter.cs" />
+    <Compile Include="Converters\AdditionConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="ForceType.cs" />
+    <Compile Include="MarkupExtensions\AdditionConverterExtension.cs" />
+    <Compile Include="MarkupExtensions\BooleanToVisibilityConverterExtension.cs" />
+    <Compile Include="MarkupExtensions\ConverterMarkupExtension.cs" />
+    <Compile Include="MarkupExtensions\MultiValueConverterMarkupExtension.cs" />
+    <Compile Include="Models\Link.cs" />
+    <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Node.cs" />
+    <Compile Include="Models\UmlAggregationRelation.cs" />
+    <Compile Include="Models\UmlAssociationRelation.cs" />
+    <Compile Include="Models\UmlAttribute.cs" />
+    <Compile Include="Models\UmlClassMember.cs" />
+    <Compile Include="Models\UmlCompositionRelation.cs" />
+    <Compile Include="Models\UmlDependenceRelation.cs" />
+    <Compile Include="Models\UmlImplementsInterfaceRelation.cs" />
+    <Compile Include="Models\UmlInheritanceRelation.cs" />
+    <Compile Include="Models\UmlMethodLink.cs" />
+    <Compile Include="Models\UmlMethodNode.cs" />
+    <Compile Include="Models\UmlNote.cs" />
+    <Compile Include="Models\UmlNoteLink.cs" />
+    <Compile Include="Models\UmlOperation.cs" />
+    <Compile Include="Models\UmlProperty.cs" />
+    <Compile Include="Utilities\UIFinder.cs" />
+    <Compile Include="ViewModels\Diagram.cs" />
+    <Compile Include="ViewModels\DiagramLink.cs" />
+    <Compile Include="ViewModels\DiagramNode.cs" />
+    <Compile Include="ViewModels\Forces\ForceDefinition.cs" />
+    <Compile Include="ViewModels\Forces\ForceSetting.cs" />
+    <Compile Include="ViewModels\Forces\LinkAttractionDefinition.cs" />
+    <Compile Include="ViewModels\Forces\LinkMomentDefinition.cs" />
+    <Compile Include="ViewModels\Forces\Node2NodeRepulsionDefinition.cs" />
+    <Compile Include="ViewModels\Forces\NodeAttractionDefinition.cs" />
+    <Compile Include="ViewModels\Forces\TagLaneCaptureDefinition.cs" />
+    <Compile Include="ViewModels\UmlDiagramClassProperty.cs" />
+    <Compile Include="ViewModels\UmlDiagramDependenceRelation.cs" />
+    <Compile Include="ViewModels\UmlDiagramImplementsInterfaceRelation.cs" />
+    <Compile Include="ViewModels\UmlDiagramInputParser.cs" />
+    <Compile Include="ViewModels\UmlDiagramInteractor.cs" />
+    <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="VectorExt.cs" />
+    <Compile Include="ViewModels\UmlDiagramAggregationRelation.cs" />
+    <Compile Include="ViewModels\UmlDiagramAssociationRelation.cs" />
+    <Compile Include="ViewModels\UmlDiagramClassAttribute.cs" />
+    <Compile Include="ViewModels\UmlDiagramClassMember.cs" />
+    <Compile Include="ViewModels\UmlDiagramClassOperation.cs" />
+    <Compile Include="ViewModels\UmlDiagramCompositionRelation.cs" />
+    <Compile Include="ViewModels\UmlDiagramMethodLink.cs" />
+    <Compile Include="ViewModels\UmlDiagramMethodNode.cs" />
+    <Compile Include="ViewModels\UmlDiagramNote.cs" />
+    <Compile Include="ViewModels\UmlDiagramNoteLink.cs" />
+    <Compile Include="ViewModels\UmlDiagramSimulator.cs" />
+    <Compile Include="ViewModels\TaskPanelViewModel.cs" />
+    <Compile Include="ViewModels\UmlDiagramClass.cs" />
+    <Compile Include="ViewModels\UmlDiagram.cs" />
+    <Compile Include="ViewModels\UmlDiagramRelation.cs" />
+    <Compile Include="ViewModels\UmlDiagramInheritanceRelation.cs" />
+    <Compile Include="Views\DiagramView.xaml.cs">
+      <DependentUpon>DiagramView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TaskPanelView.xaml.cs">
+      <DependentUpon>TaskPanelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UmlDiagramClassView.xaml.cs">
+      <DependentUpon>UmlDiagramClassView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UmlDiagramMethodNodeView.xaml.cs">
+      <DependentUpon>UmlDiagramMethodNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UmlDiagramNoteView.xaml.cs">
+      <DependentUpon>UmlDiagramNoteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ViewAreaView.xaml.cs">
+      <DependentUpon>ViewAreaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ViewportView.xaml.cs">
+      <DependentUpon>ViewportView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Resources\ControlStyles\AutoCompleteBoxStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ControlStyles\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ControlStyles\ExpanderStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ControlStyles\General.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ControlStyles\ImageStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ControlStyles\ToolBarStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ControlStyles\ViewAreaStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DiagramViewerStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons\FolderOpen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons\GeneralSave.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons\MoviePause.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons\MoviePlay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DiagramView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ViewArea.cs" />
+    <Compile Include="Controls\Viewport.cs" />
+    <Compile Include="Models\UmlClass.cs" />
+    <Compile Include="Models\UmlModel.cs" />
+    <Compile Include="Models\UmlRelation.cs" />
+    <Compile Include="Utilities\DoubleUtility.cs" />
+    <Compile Include="Utilities\EventArg.cs" />
+    <Compile Include="Utilities\EventHandlerExt.cs" />
+    <Compile Include="ViewModels\DelegateCommand.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\ViewAreaViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\ViewportViewModel.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Views\TaskPanelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UmlDiagramClassView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UmlDiagramMethodNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UmlDiagramNoteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ViewAreaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ViewportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SDILReader\SDILReader.csproj">
+      <Project>{2A3A875E-8024-497F-88EA-FCFE96AB1224}</Project>
+      <Name>SDILReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZoomAndPan\ZoomAndPan.csproj">
+      <Project>{468ADEDE-6F5E-40C0-99C9-C6DAC4FAC934}</Project>
+      <Name>ZoomAndPan</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
