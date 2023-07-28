@@ -12,5 +12,13 @@ I'm far from done with this project but for now i can use it.
 <br>
 <br>
 
+* Simulation off
+
+![image](https://github.com/rvandaal/EntityViewer/assets/8653718/9614900e-e422-4163-9155-0433bda17019)
+
+<br>
+
+* Simulation on
+  
 ![image](https://github.com/rvandaal/EntityViewer/assets/8653718/716b24f3-f6dc-443e-a2fa-3bad0901f779)
 
